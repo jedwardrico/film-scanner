@@ -3,8 +3,8 @@
 Firmware for a motorized film-scanning transport: an ESP32-S (S2/S3) drives a
 NEMA 17 stepper through a TMC2209 driver to advance film by exactly one frame
 at a time, and fires an opto-isolated trigger into a camera's shutter contact
-to capture each frame. Film type (Super 8, Standard 8, 16mm, 35mm) is chosen
-on an OLED menu; a single "forward" button does the advance-then-shoot cycle.
+to capture each frame. Film type (35mm, 6x9, 6x6, 6x4.5) is chosen on an
+OLED menu; a single "forward" button does the advance-then-shoot cycle.
 
 ## Hardware
 
