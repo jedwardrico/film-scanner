@@ -20,6 +20,6 @@ class Buttons {
     uint32_t lastChangeMs = 0;
   };
 
-  static constexpr int kCount = 3;
+  static constexpr int kCount = 7;
   ButtonState buttons_[kCount];
 };
