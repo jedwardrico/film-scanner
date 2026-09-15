@@ -6,9 +6,13 @@
 // in main.cpp.
 enum class InputEvent {
   NONE,
-  NEXT,     // move selection forward / increment
-  PREV,     // move selection backward / decrement
-  SELECT,   // confirm current selection
-  BACK,     // cancel / return to menu
-  FORWARD,  // advance one frame and fire the shutter
+  NEXT,             // move selection forward / increment
+  PREV,             // move selection backward / decrement
+  SELECT,           // confirm current selection / save
+  BACK,             // cancel / return to menu
+  FRAME_FORWARD,    // advance one whole frame
+  FRAME_BACKWARD,   // back up one whole frame
+  JOG_FORWARD,      // move forward by the configured jog step count
+  JOG_BACKWARD,     // move backward by the configured jog step count
+  SHUTTER,          // fire the shutter
 };
