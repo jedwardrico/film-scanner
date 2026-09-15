@@ -3,9 +3,10 @@
 // Frame advance distances per film format, in millimeters. For 35mm this is
 // perforation pitch times perforations-per-frame; medium format (120/220
 // roll film) has no perforations, so its pitch is the nominal frame length
-// along the film plus a typical inter-frame gap. These are nominal values —
-// verify against your actual stock/camera gate and adjust if frames drift
-// over a reel.
+// along the film plus a typical inter-frame gap. These are nominal values,
+// used as the default until a film type is calibrated on-device (see
+// FilmCalibration.h and the README's "Calibration" section) — verify against
+// your actual stock/camera gate and recalibrate if frames drift over a reel.
 
 struct FilmType {
   const char *name;

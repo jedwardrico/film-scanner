@@ -11,9 +11,10 @@ class StepperControl {
  public:
   void begin();
 
-  // Kicks off a non-blocking move of `pitchMm` millimeters. Call update()
-  // every loop() iteration until isMoving() returns false.
-  void startFrameAdvance(float pitchMm);
+  // Kicks off a non-blocking relative move of exactly `steps` motor steps.
+  // Used both for calibrated frame advances and for calibration jogging.
+  // Call update() every loop() iteration until isMoving() returns false.
+  void startAdvanceSteps(long steps);
 
   // Pumps the step generator. Must be called frequently (every loop()
   // iteration) while a move is in progress.

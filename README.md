@@ -40,14 +40,42 @@ referenced to a different ground than your scanner electronics.
 
 **Motor/drivetrain**: `MM_PER_MOTOR_REV` in `config.h` must match your actual
 mechanism (capstan/roller diameter, pulley+belt ratio, or sprocket pitch
-circle) — it's a placeholder. Calibrate it by commanding a known number of
-motor revolutions and measuring actual film travel, then adjust until the
-computed `STEPS_PER_MM` produces accurate frame spacing.
+circle) — it's a placeholder. Get it roughly right by commanding a known
+number of motor revolutions and measuring actual film travel; per-film-type
+frame spacing is then fine-tuned with the on-device calibration menu below,
+so `MM_PER_MOTOR_REV` only needs to be close, not exact.
+
+## Calibration
+
+`FILM_TYPES` in `include/FilmTypes.h` gives each film format a nominal frame
+pitch, but real transports (belt slip, roller diameter tolerance, backlash)
+drift from nominal. Rather than editing and reflashing that table, each film
+type's actual frame-advance step count can be calibrated on-device and is
+stored in flash (NVS), independent of the firmware image:
+
+1. From the film-type menu, cycle with NEXT past the last film type to the
+   **Calibrate...** entry and press SELECT.
+2. Pick the film type to (re)calibrate with NEXT, then SELECT.
+3. Load a strip of that film and press FORWARD repeatedly — each press jogs
+   the transport forward by `CALIBRATION_JOG_STEPS` (see `config.h`). Watch
+   the film and stop once exactly one frame has advanced.
+4. Press SELECT to save the accumulated step count for that film type, or
+   BACK to cancel without saving.
+
+The saved value overrides the nominal `framePitchMm`-derived default for
+that film type until it's recalibrated again; other film types are
+unaffected. This is handled by `FilmCalibration` (`include/FilmCalibration.h`,
+`src/FilmCalibration.cpp`), which wraps the ESP32 `Preferences` (NVS) API.
 
 ## Firmware architecture
 
 - `include/config.h` — all pins, motor/driver tuning, and timing constants.
-- `include/FilmTypes.h` — table of film formats and their frame pitch (mm).
+- `include/FilmTypes.h` — table of film formats and their nominal frame
+  pitch (mm), used as the calibration default.
+- `FilmCalibration` — persists each film type's calibrated frame-advance
+  step count in flash (NVS) and falls back to the nominal value from
+  `FilmTypes.h` until that film type has been calibrated. See "Calibration"
+  below.
 - `include/InputEvent.h` — logical input events (`NEXT`/`PREV`/`SELECT`/
   `BACK`/`FORWARD`), decoupled from whatever physical control produces them.
 - `Buttons` — debounces the three momentary buttons and emits `InputEvent`s.
@@ -61,8 +89,10 @@ computed `STEPS_PER_MM` produces accurate frame spacing.
   OLED via U8g2 (swap the panel driver in `Display.h`/`.cpp` if you use a
   different screen).
 - `src/main.cpp` — the state machine: `MENU -> READY -> ADVANCING -> SHUTTER
-  -> READY -> ...`. Everything is polled non-blockingly in `loop()` (no
-  `delay()`), so buttons stay responsive while the motor is moving.
+  -> READY -> ...`, with a side branch `MENU -> CALIBRATE_SELECT ->
+  CALIBRATE_JOG -> MENU` for calibration. Everything is polled non-blockingly
+  in `loop()` (no `delay()`), so buttons stay responsive while the motor is
+  moving.
 
 ## Build
 
