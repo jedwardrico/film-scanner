@@ -1,4 +1,3 @@
-#include <cmath>
 #include "StepperControl.h"
 
 void StepperControl::begin() {
@@ -20,10 +19,7 @@ void StepperControl::begin() {
   digitalWrite(PIN_STEPPER_ENABLE, LOW);  // active LOW enable
 }
 
-void StepperControl::startFrameAdvance(float pitchMm) {
-  long steps = lroundf(pitchMm * STEPS_PER_MM);
-  stepper_.move(steps);
-}
+void StepperControl::startAdvanceSteps(long steps) { stepper_.move(steps); }
 
 void StepperControl::update() { stepper_.run(); }
 

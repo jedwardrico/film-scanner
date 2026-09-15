@@ -63,3 +63,11 @@ constexpr float STEPPER_ACCEL_SPS2    = 8000.0f;      // steps/sec^2
 
 constexpr uint32_t BUTTON_DEBOUNCE_MS = 30;
 constexpr uint32_t DISPLAY_REFRESH_MS = 100;
+
+// ---------------------------------------------------------------------------
+// CALIBRATION
+// ---------------------------------------------------------------------------
+
+// Motor steps commanded per jog press while calibrating a film type's
+// frame-advance distance (see FilmCalibration.h). Smaller = finer control.
+constexpr long CALIBRATION_JOG_STEPS = 20;
